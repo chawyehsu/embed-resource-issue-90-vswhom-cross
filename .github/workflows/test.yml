@@ -1,0 +1,40 @@
+name: Test
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {
+              name: "Windows x86_64 native (x86_64 host)",
+              target: win-64,
+              os: windows-latest,
+            }
+          - {
+              name: "Windows x86_64 cross (arm64 host)",
+              target: win-64,
+              os: windows-11-arm,
+            }
+          - {
+              name: "Windows arm64 native (arm64 host)",
+              target: win-arm64,
+              os: windows-11-arm,
+            }
+          - {
+              name: "Windows arm64 cross (x86_64 host)",
+              target: win-arm64,
+              os: windows-latest,
+            }
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Install Pixi
+        uses: prefix-dev/setup-pixi@a0af7a228712d6121d37aba47adf55c1332c9c2e # v0.9.4
+      - name: Run Build
+        run: pixi run build --target-platform ${{ matrix.target }}
