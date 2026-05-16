@@ -37,8 +37,9 @@ jobs:
         with:
           run-install: false
       - name: Run Build
+        shell: pwsh
         run: |
-          cd D:\
+          cd C:\
           git clone --depth 1 https://github.com/chawyehsu/embed-resource-issue-90-vswhom-cross s
           cd s
           pixi run build --target-platform ${{ matrix.target }}
